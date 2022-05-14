@@ -98,8 +98,28 @@
                 }
 
 
-                function slide4(){
-                    
+                function slide4() {
+                    const pptx = createPptxGenJS()
+                    const slide = pres.addSlide()
+                    const left = getSize(30)
+                    const right = getSize(800)
+                    const topY = getSize(100)
+                    const bottomY = getSize(350)
+                    const h = getSize(30)
+                    const w = getSize(200)
+                    const shape = (x, y) => slide.addShape(pres.ShapeType.rect, { fill: { color: "0F273D" }, h, w, x, y, rectRadius: getSize(10) });
+                    slide.background = { data: mainImage }
+                    slide.addText('设备部异常分析&经验总结-OPL', { x: getSize(80), y: getSize(20), h: getSize(30), fontFace: 'Arial', align: 'left', fontSize: 24, color: '4472C4' })
+                    shape(left, topY)
+                    slide.addText('异常问题描述：', { x: left + getSize(10), y: topY, h: getSize(30), fontFace: 'Arial', align: 'left', fontSize: 14, color: 'FEFEFE' })
+                    shape(right, topY)
+                    slide.addText('5Why根源分析：', { x: right + getSize(10), y: topY, w, h: getSize(30), fontFace: 'Arial', align: 'left', fontSize: 14, color: 'FEFEFE' })
+
+                    shape(left, bottomY)
+                    slide.addText('处理过程分析：', { x: right + getSize(10), y: topY, w, h: getSize(30), fontFace: 'Arial', align: 'left', fontSize: 14, color: 'FEFEFE' })
+            
+                    shape(right, bottomY)
+                    slide.addText('改善措施：', { x: right + getSize(10), y: topY, w, h: getSize(30), fontFace: 'Arial', align: 'left', fontSize: 14, color: 'FEFEFE' })
                 }
 
 

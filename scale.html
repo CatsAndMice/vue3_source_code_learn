@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body,
+        dl,
+        dd {
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            top: 0;
+            flex-direction: column;
+            height: 100%;
+            display: flex;
+        }
+
+        .content dd {
+            padding: 0 5px;
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <dl class="content">
+        <dd>😆</dd>
+        <dd>🫠</dd>
+        <dd>🤣</dd>
+        <dd>😀</dd>
+        <dd>😅</dd>
+        <dd>😀</dd>
+        <dd>😅</dd>
+    </dl>
+    <script>
+        const content = document.querySelector(".content")
+        const dds = Array.from(document.querySelectorAll(".content dd"))
+        document.addEventListener('mousemove', function (e) {
+            const { clientX, clientY } = e
+            dds.forEach(dd => {
+                //获取每个元素的x距离
+                //注意元素放大时，将会把父级元素撑大,间接的dd.offsetLeft获取的值也会相应的变大，导致交互有距离差
+                const x = dd.offsetLeft + dd.offsetWidth / 2
+                const y = dd.offsetTop + dd.offsetHeight / 2 + content.offsetTop
+                const gapX = clientX - x
+                const gapY = clientY - y
+                const gap = Math.sqrt(Math.pow(gapX, 2) + Math.pow(gapY, 2))
+                let val = 1 - gap / (dd.offsetWidth * 7)
+                if (val < 0.5) {
+                    val = 0.5
+                }
+                dd.style.fontSize = 80 * val + 'px'
+            })
+        })
+
+
+    </script>
+</body>
+
+</html>
