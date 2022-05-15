@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" accept="image/*" id="file">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/compressorjs/1.1.1/compressor.min.js"></script>
+    <script>
+        const createEnvironment = (config) => {
+            const MAX_NUM = 9;
+            const MAX_SIZE = 1024 * 1024 * 2;
+            const isArray = (value) => Array.isArray(value);
+            const gte = (param1, param2) => {
+                return param1 === param2 || param1 > param2
+            }
+        
+            const fileUpdate = async ({ url, fileName, formData }) => {
+
+                let { status } = await axios({
+                    method: 'POST',
+                    headers: { "Content-Type": "multipart/form-data" },
+                    data: formData,
+                    url
+                })
+                return status === 200 ? `${url}/${fileName}` : null;
+            }
+
+            /**
+             * 服务器签名直连
+             */
+            const getFormData = async (result) => {
+                let data = config,
+                    fileName = `${Date.now()}.${result.type.split("/")[1]}`,
+                    pathName = `${data.dir}${fileName}`;
+                const formData = new FormData();
+                formData.set("key", pathName);
+                formData.set("policy", data.policy);
+                formData.set("OSSAccessKeyId", data.accessId);
+                formData.set("success_action_status", "200");
+                formData.set("signature", data.signature);
+                formData.set("name", fileName);
+                formData.set("file", result, result.name);
+                return { data, formData };
+            }
+
+            const upDataImage = async (result, htmlContext) => {
+                const { formData, data } = await getFormData(result);
+                const url = await fileUpdate({ url: data.host, formData, fileName: formData.get('key') });
+                //只允许上传9张图片
+                if (gte(htmlContext.length, 9)) return;
+                console.log(url);
+                url ? null : htmlContext.push({ url });
+
+            }
+
+            const upDataSingleImage = (file, htmlContext) => {
+                if (gte(file.size, MAX_SIZE)) {
+                    Promise.resolve().then(() => {
+                        //压缩
+                        new window.Compressor(file, {
+                            success(result) {
+                                upDataImage(result, htmlContext);
+                            }
+                        });
+                    })
+                    return;
+                }
+
+                upDataImage(file, htmlContext);
+            }
+
+            const upDataSingleImages = (images, htmlContext) => {
+                images.forEach((image) => {
+                    upDataSingleImage(image, htmlContext)
+                });
+            }
+
+            /**
+             * images(File|File[]):图片
+             * htmlContext(Array): 用于存储上传图片后的生成的链接
+             */
+            return (images, htmlContext) => {
+                if (gte(htmlContext.length, MAX_NUM)) {
+                    console.warn('图片已超出数量');
+                    return;
+                }
+                console.log(11);
+                isArray(images) ? upDataSingleImages(images, htmlContext) : upDataSingleImage(images, htmlContext);
+            }
+        }
+
+
+        //config是后端请求获取的数据
+        const updateImage = createEnvironment({"accessId":"LTAI4G9mXLhWzrvSk2tEEBAC","policy":"eyJleHBpcmF0aW9uIjoiMjAyMi0wNS0xM1QwOToyMTozMC41OTFaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF0sWyJzdGFydHMtd2l0aCIsIiRrZXkiLCJzZXJ2ZXItcGxhdGZvcm0vMi91cGxvYWQvMjAyMi0wNS0xMy8iXV19","signature":"jWdDxoDTGOcar6WxZdTAhe5SHA8=","host":"https://ywja-public-bucket.oss-cn-hangzhou.aliyuncs.com/","expire":"1652433690","prefixFormat":"server-platform/2/upload/2022-05-13/","dir":"server-platform/2/upload/2022-05-13/"})
+        const file = document.getElementById('file')
+        file.onchange = () => {
+
+            updateImage(file.files[0], [])
+        }
+
+
+    </script>
+</body>
+
+</html>
