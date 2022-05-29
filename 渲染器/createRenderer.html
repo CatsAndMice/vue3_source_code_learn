@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function createRenderer() {
+            const render = (vnode,container) => {
+                //新vnode存在，将其与旧的vnode一起传递给patch函数，进行打补丁
+                if(vnode){
+                    patch(container._vnode,vnode,container)
+                }else{
+                    if(container._vnode){
+                        //旧的vnode存在，说明是unmount操作
+                        container.innerHtml = ''
+                    }
+                }
+                //新vnode，存储在container，即后续渲染中的vnode
+                container._vnode = vnode
+            }
+            return {
+                render
+            }
+        }
+        const renderer = createRenderer()
+        //首次渲染
+        renderer.render(oldVnode,document.querySelector('#app'))
+        renderer.render(newVnode,document.querySelector('#app'))
+    </script>
+</body>
+
+</html>

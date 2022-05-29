@@ -38,3 +38,36 @@ function toRefs(obj) {
     return wrap
 }
 
+//自动脱ref
+function proxyRefs(target) {
+    //再代理一层
+    return new Proxy(target, {
+        get(target, key, reactive) {
+            const value = Reflect.get(target, key, reactive)
+            return value._v_isRef ? value.value : value
+        },
+
+        set(target, key, newValue, reactive) {
+            const value = target[key]
+            //如果是ref
+            if(value._v_isRef){
+                value.value = newValue
+                return true
+            }
+
+            return Reflect.set(target,key,value,reactive)
+        }
+    })
+}
+
+proxyRefs({ ...toRefs(obj) })
+
+//setup返回的数据会传递给proxyRefs函数进行处理
+const MyComponent = {
+    setup() {
+        const count = ref(0)
+        return {
+            count
+        }
+    }
+}

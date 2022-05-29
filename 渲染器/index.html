@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="../node_modules/@vue/reactivity/dist/reactivity.global.js"></script>
+    <script>
+        const { effect, ref } = window.VueReactivity
+        const count = ref(1)
+        const renderer = (content, container) => {
+            console.log(content, container);
+            container.appendChild(content)
+        }
+
+        effect(() => {
+            console.log(11);
+            renderer(document.createElement(`<span>${count.value}</span>`), document.querySelector('#app'))
+        })
+        setTimeout(() => {
+            count.value++
+        }, 3000)
+    </script>
+</body>
+
+</html>
