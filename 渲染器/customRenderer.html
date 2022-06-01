@@ -13,8 +13,10 @@
     <script>
         function createRenderer(option) {
             const { createElement, setElementText, insert, patchProps } = option
+
             function mountElement(vnode, container) {
-                const el = createElement(vnode.type)
+                //将真实的dom与vnode关联起来
+                const el = vnode.el = createElement(vnode.type)
                 //处理属性
                 if (vnode.props) {
                     for (const key in vnode.props) {
@@ -29,15 +31,34 @@
                 insert(el, container)
             }
 
-
-
-
             function patch(n1, n2, container) {
-                //如果n1不存在，意味着挂载，则调用 mountElement函数完成挂载
-                if (!n1) {
-                    mountElement(n2, container)
-                } else {
-                    //如果n1存在，意味着要打补丁
+                //如果type都不相同时，打补丁操作已经没有必要了
+                if (n1 && n1.type !== n2.type) {
+                    unMount(n1)
+                    n1 = null
+                }
+                const { type } = n1
+                //区分type类型
+                if (typeof type === 'string') {
+                    //普通元素
+                    if (!n1) {
+                        //如果n1不存在，意味着挂载，则调用 mountElement函数完成挂载
+                        mountElement(n2, container)
+                    } else {
+                        patchElement(n1, n2)
+                    }
+                    //组件类型
+                } else if (typeof type === "object") {
+
+                    //其他类型
+                } else if (type === 'xx') { }
+
+            }
+
+            function unMount(vnode) {
+                const parentNode = vnode.el.parentNode
+                if (parentNode) {
+                    parentNode.removeChild(vnode.el)
                 }
             }
 
@@ -47,8 +68,7 @@
                     patch(container._vnode, vnode, container)
                 } else {
                     if (container._vnode) {
-                        //旧的vnode存在，说明是unmount操作
-                        container.innerHtml = ''
+                        unMount(container._vnode)
                     }
                 }
                 //新vnode，存储在container，即后续渲染中的vnode
@@ -79,12 +99,41 @@
             insert(el, parent, anchor = null) {
                 parent.insetBefore(el, anchor)
             },
-
-
-            
             patchProps(el, key, prevValue, nextValue) {
-                //特殊处理class
-                if (key === 'class') {
+                //绑定事件,事件约定以on开头
+                if (/^on/.test(key)) {
+                    //小写
+                    const name = key.splice(2).toLowerCase()
+                    /**
+                     * 每次都要移除上次绑定事件，性能问题
+                     */
+                    //移除上次绑定的事件  
+                    // prevValue && el.removeEventListener(name, prevValue)
+                    // el.addEventListener(name, nextValue)
+                    let invoker = el._val
+                    if (nextValue) {
+                        if (!invoker) {
+
+                            invoker = el._val = (e) => {
+                                //事件对象
+                                invoker.value(e)
+                            }
+                            invoker.value = nextValue
+                            //执行真正的事件
+                            el.addEventListener(name, invoker)
+                        } else {
+                            invoker = nextValue
+                        }
+
+                        //新的事件绑定函数不存在，之前的invoker函数存在，则移除绑定
+                    } else if (invoker) {
+                        el.removeEventListener(name, invoker)
+                    }
+
+
+
+                }//特殊处理class
+                else if (key === 'class') {
                     el.className = nextValue || ""
                     //是否有对应的dom属性存在
                     //但有些dom属性是只读的
