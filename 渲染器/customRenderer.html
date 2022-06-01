@@ -79,10 +79,16 @@
             insert(el, parent, anchor = null) {
                 parent.insetBefore(el, anchor)
             },
+
+
+            
             patchProps(el, key, prevValue, nextValue) {
-                //是否有对应的dom属性存在
-                //但有些dom属性是只读的
-                if (shouldSetAsProps(el, key, nextValue)) {
+                //特殊处理class
+                if (key === 'class') {
+                    el.className = nextValue || ""
+                    //是否有对应的dom属性存在
+                    //但有些dom属性是只读的
+                } else if (shouldSetAsProps(el, key, nextValue)) {
                     // 获取对应类型
                     const type = typeof el[key]
                     const value = vnode.props[key]
