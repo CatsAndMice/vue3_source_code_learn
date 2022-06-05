@@ -20,7 +20,7 @@
                 //处理属性
                 if (vnode.props) {
                     for (const key in vnode.props) {
-                        patchProps(el, key, null, props[key])
+                        patchProps(el, key, null, vnode.props[key])
                     }
                 }
 
@@ -31,13 +31,42 @@
                 insert(el, container)
             }
 
+
+            function patchElement(n1, n2) {
+                // n1旧节点,n2新节点
+                //el应该是相等的
+                const el = n2.el = n1.el
+
+                // 新子节点：1.无子节点，2.文本子节点，3.一组子节点
+                const oldProps = n1.props
+                const newProps = n2.props
+                // 更新props
+                for (const prop in newProps) {
+                    if (newProps[prop] !== oldProps[prop]) {
+                        patchProps(el, prop, oldProps[prop], newProps[prop])
+                    }
+                }
+
+                // 删除旧节点更新多余的属性
+                for (const key in oldProps) {
+                    if (!key in newProps) {
+                        patchProps(el, key, oldProps[key], null)
+                    }
+                }
+                // 以上更新元素本身
+
+                // 更新子元素
+                patchChildren(n1, n2, el)
+            }
+
+
             function patch(n1, n2, container) {
                 //如果type都不相同时，打补丁操作已经没有必要了
                 if (n1 && n1.type !== n2.type) {
                     unMount(n1)
                     n1 = null
                 }
-                const { type } = n1
+                const { type } = n2
                 //区分type类型
                 if (typeof type === 'string') {
                     //普通元素
@@ -45,6 +74,7 @@
                         //如果n1不存在，意味着挂载，则调用 mountElement函数完成挂载
                         mountElement(n2, container)
                     } else {
+                        //打补丁
                         patchElement(n1, n2)
                     }
                     //组件类型
@@ -79,16 +109,12 @@
                 render
             }
         }
-        const vnode = {
-            type: 'h1',
-            props: { disabled: false },
-            children: 'hello'
-        }
 
         function shouldSetAsProps(el, key, value) {
             if (key === 'form' && el.tagName === "INPUT") return false
             return key in el
         }
+
         const renderer = createRenderer({
             createElement(tag) {
                 return document.createElement(tag)
@@ -97,28 +123,40 @@
                 el.textContent = text
             },
             insert(el, parent, anchor = null) {
-                parent.insetBefore(el, anchor)
+                console.log(el, parent);
+                parent.insertBefore(el, anchor)
             },
             patchProps(el, key, prevValue, nextValue) {
                 //绑定事件,事件约定以on开头
                 if (/^on/.test(key)) {
                     //小写
-                    const name = key.splice(2).toLowerCase()
+                    const name = key.slice(2).toLowerCase()
                     /**
                      * 每次都要移除上次绑定事件，性能问题
                      */
                     //移除上次绑定的事件  
                     // prevValue && el.removeEventListener(name, prevValue)
                     // el.addEventListener(name, nextValue)
-                    let invoker = el._val
+                    let invokers = el._val || (el._val = {})
+                    let invoker = invokers[key]
                     if (nextValue) {
                         if (!invoker) {
-
-                            invoker = el._val = (e) => {
-                                //事件对象
-                                invoker.value(e)
+                            invoker = el._val[key] = (e) => {
+                                //e.timeStamp事件发生时间
+                                // 如果事件发生时间早于事件处理函数绑定时间，则不执行事件
+                                if (e.timeStamp < invoker.attached) return
+                                //同一个事件绑定多个
+                                if (Array.isArray(invoker.value)) {
+                                    invoker.value.forEach(fn => fn(e))
+                                } else {
+                                    //事件对象
+                                    invoker.value(e)
+                                }
                             }
                             invoker.value = nextValue
+                            // 添加attached属性，存储事件处理函数被绑定的时间
+                            // 和 JavaScript 中其他可用的时间类函数（比如Date.now）不同的是，window.performance.now()返回的时间戳没有被限制在一毫秒的精确度内，相反，它们以浮点数的形式表示时间，精度最高可达微秒级。
+                            invoker.attached = performance.now()
                             //执行真正的事件
                             el.addEventListener(name, invoker)
                         } else {
@@ -152,6 +190,23 @@
                 }
             }
         })
+
+        const vnode = {
+            type: 'h1',
+            props: {
+                disabled: false,
+                onClick: [
+                    () => {
+                        console.log('click1');
+                    },
+                    () => {
+                        console.log('click2');
+                    }
+                ],
+                onChange: () => { }
+            },
+            children: 'hello'
+        }
         renderer.render(vnode, document.querySelector('#app'))
 
     </script>
