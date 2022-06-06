@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #rotate {
+            box-sizing: border-box;
+            display: inline-block;
+            border-left: 30px solid transparent;
+            border-top: 60px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 60px solid #000;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform-origin: center center;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="rotate"></div>
+    <script>
+        const rotate = document.getElementById('rotate')
+        const props = rotate.getBoundingClientRect()
+        const x = props.left + props.width / 2
+        const y = props.top + props.height / 2
+        document.onmousemove = (e) => {
+            const mouseX = e.pageX;
+            const mouseY = e.pageY;
+            const diffX = mouseX - x;
+            const diffY = mouseY - y;
+            const diffZ = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2))
+            const cos = diffY / diffZ;
+            //计算弧度
+            const radian = Math.acos(cos)
+            //通过弧度计算出角度
+            let deg = 180 / Math.PI * radian
+
+            if (mouseX > x && (mouseY > y || mouseY < y)) {//鼠标在第一/四象限
+                deg = 180 - deg;
+            }
+
+            if (mouseX == x && mouseY > y) {//鼠标在y轴负方向上
+                deg = 180;
+            }
+
+            if (mouseX == x && mouseY < y) {//鼠标在y轴正方向上
+                deg = 0;
+            }
+
+            if (mouseX > x && mouseY == y) {//鼠标在x轴正方向上
+                deg = 90;
+            }
+
+            if (mouseX < x && (mouseY > y || mouseY < y)) {//鼠标在第二/三象限
+                deg = 180 + deg;
+            }
+
+            if (mouseX < x && mouseY == y) {//鼠标在x轴负方向
+                deg = 270;
+            }
+
+            rotate.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
+        }
+    </script>
+</body>
+
+</html>
