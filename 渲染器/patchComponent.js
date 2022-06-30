@@ -1,3 +1,4 @@
+const { shallowReadonly, shallowReactive } = require("@vue/reactivity");
 
 function hasPropsChanged(nextProps, pervProps) {
     const nextKeys = object.keys(nextProps);
@@ -29,4 +30,31 @@ function patchComponent(n1, n2, anchor) {
         // for()
     }
 }
+
+const ComVNode = {
+    type: MyComponent,
+    props: {
+        onChange: handler
+    }
+}
+function mountComponent(n1, n2, anchor) {
+    const instance = {
+        state,
+        props: shallowReactive(props),
+        isMounted: false,
+        subTree: null
+    }
+    function emit(event, ...payload) {
+        const eventName = `on${event[0].toUpperCase() + event.slice(1)}`;
+        const handler = instance.props[eventName]
+        if(handler){
+            handler(...payload)
+        }else{
+            console.log('事件不存在');
+        }
+    }
+
+    const setupContext = {attr,emit}
+}
+
 
