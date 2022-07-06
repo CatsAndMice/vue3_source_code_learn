@@ -1,4 +1,4 @@
-const { ref } = require('@vue/reactivity');
+const { ref, shallowRef } = require('@vue/reactivity');
 const { isFunc } = require('medash');
 function defineAsyncComponent(options) {
     let InnerComp = null
@@ -9,16 +9,39 @@ function defineAsyncComponent(options) {
     }
 
     const { loader } = options
-
+    let retries = 0
+    function load() {
+        loader().catch(err => {
+            if (options.onError) {
+                // 重试机制
+                return new Promise((resolve, reject) => {
+                    const retry = () => {
+                        resolve(load())
+                        retries++
+                    }
+                    const fail = () => reject(err)
+                    options.onError(retry, fail, retries)
+                })
+            } else {
+                throw err
+            }
+        })
+    }
     return {
         name: "AsyncComponentWrapper",
         setup() {
+            const error = shallowRef(null)
             const loaded = ref(false)
             const timeout = ref(false)
-            loader().then((c) => {
-                InnerComp = c
+            load().then((c) => {
+                InnerComp = c 
                 loaded.value = true
+             }, (err) => {
+                error.value = err
             })
+
+
+
             let timer = null
             // 超时
             if (options.timeout) {
