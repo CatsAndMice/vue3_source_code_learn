@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script>const a = {
+            "types": [
+                {
+                    "type_name": "焊机-基础参数",
+                    "type_data": [
+                        {
+                            "p_type": "碎片率"
+                        },
+                        {
+                            "p_type": "碎片率2"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-操作参数",
+                    "type_data": [
+                        {
+                            "p_type": "安全装置"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-辅助参数",
+                    "type_data": [
+                        {
+                            "p_type": "卡片次数"
+                        }
+                    ]
+                }
+            ],
+            "data": [
+                {
+                    "se_id": 1,
+                    "name": "焊机-设备1 (供应商A)",
+                    "eq_data": [
+                        {
+                            "type_name": "焊机-基础参数",
+                            "type_data": [
+                                {
+                                    "p_type": "碎片率",
+                                    "se_id": 1,
+                                    "e_value": "10"
+                                },
+                                {
+                                    "p_type": "碎片率2",
+                                    "se_id": 1,
+                                    "e_value": "99.97%"
+                                }
+                            ]
+                        },
+                        {
+                            "type_name": "焊机-辅助参数",
+                            "type_data": [
+                                {
+                                    "p_type": "卡片次数",
+                                    "se_id": 1,
+                                    "e_value": "55"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "se_id": 2,
+                    "name": "焊机-设备2 (供应商B)",
+                    "eq_data": [
+                        {
+                            "type_name": "焊机-基础参数",
+                            "type_data": [
+                                {
+                                    "p_type": "碎片率",
+                                    "se_id": 2,
+                                    "e_value": "15"
+                                },
+                                {
+                                    "p_type": "碎片率2",
+                                    "se_id": 2,
+                                    "e_value": "98%"
+                                }
+                            ]
+                        },
+                        {
+                            "type_name": "焊机-辅助参数",
+                            "type_data": [
+                                {
+                                    "p_type": "卡片次数",
+                                    "se_id": 2,
+                                    "e_value": "12"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "se_id": 41,
+                    "name": "焊机-设备3 (供应商A)",
+                    "eq_data": [
+                        {
+                            "type_name": "焊机-基础参数",
+                            "type_data": [
+                                {
+                                    "p_type": "碎片率",
+                                    "se_id": 41,
+                                    "e_value": "25"
+                                }
+                            ]
+                        },
+                        {
+                            "type_name": "焊机-操作参数",
+                            "type_data": [
+                                {
+                                    "p_type": "安全装置",
+                                    "se_id": 41,
+                                    "e_value": "100%"
+                                }
+                            ]
+                        },
+                        {
+                            "type_name": "焊机-辅助参数",
+                            "type_data": [
+                                {
+                                    "p_type": "卡片次数",
+                                    "se_id": 41,
+                                    "e_value": "6"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    </script>
+    <script>
+        function createTable(name) {
+            var html = `
+        <div class="table-content" style="margin-bottom: 40px;">
+            <p style="font-size: 20px;font-weight: 900;">${name}</p>
+        <table class="layui-table " lay-skin="line">
+        <thead>
+        <tr>
+         
+        </tr>
+        </thead>
+        <tbody>
+   
+        </tbody>
+    </table>
+        </div>
+    `;
+            return html
+        }
+
+        function createThead(names) {
+            const ths = names.map(name => {
+                return `<th>${name}</th>`
+            }).join('')
+            return {
+                ths
+            }
+        }
+
+        function createTbody(tdMap) {
+            const keys = Array.from(tdMap.keys())
+            return keys.map(key => {
+                let trTitle = `<td>${key}</td>`
+                const tdMapValue = tdMap.get(key)
+                tdMapValue.forEach(td => {
+                    trTitle += `<td style="width:200px">${td}</td>`
+                })
+                return `<tr>${trTitle}</tr>`
+            }).join('')
+        }
+
+
+
+        function getData(data = []) {
+            const dataMap = new Map()
+            data.forEach(value => {
+                const { eq_data = [], name } = value
+                const itemMap = new Map()
+                eq_data.forEach(e => {
+                    const { type_data, type_name } = e
+                    const item = {}
+                    type_data.forEach(d => {
+                        const { e_value, p_type } = d
+                        item[p_type] = e_value
+                    })
+                    itemMap.set(type_name, item)
+                })
+                dataMap.set(name, itemMap)
+            })
+            return dataMap
+        }
+
+
+
+        function renderTable(result) {
+            const main = $('#main')
+            main.find('.table-content').remove()
+            let { types = [], data = [] } = result
+            console.log(types)
+            data = getData(data)
+            const keys = Array.from(data.keys())
+            // 表头
+            const { ths } = createThead(keys)
+            console.log(ths);
+
+            types.forEach(type => {
+                const { type_name, type_data } = type
+                // 创建tabel元素
+                const tableDom = $(createTable(type_name))
+
+                //用于存放每个table具体的数值
+                const tdMap = new Map()
+
+                //遍历所有的设备名
+                keys.forEach(key => {
+                    const typeMap = data.get(key)
+                    // 返回一个对象或undefined
+                    const typeData = typeMap.get(type_name)
+
+                    type_data.forEach(td => {
+                        const { p_type } = td
+                        let value
+                        // 存在时，判断值是否为空值，为空时以""代替
+                        if (typeData) {
+                            value = typeData[p_type] ? typeData[p_type] : ''
+                        } else {
+                            // 如果typeData不存在时，统一使用''替换
+                            value = ''
+                        }
+
+                        const tdMapValue = tdMap.get(p_type)
+                        if (tdMapValue) {
+                            tdMapValue.push(value)
+                        } else {
+                            tdMap.set(p_type, [value])
+                        }
+                    })
+
+
+                })
+
+                tableDom.append(createTbody(tdMap))
+
+                main.append(tableDom)
+            })
+
+            $(main.find('.table-content')[0]).find('thead tr').append(`<th>设备参数项</th>` + ths)
+            var th = $('#main > div > table > thead > tr > th:nth-child(1)');
+            $(th).css({ 'font-weight': '800', 'font-size': '16px' });
+            var td = $('.layui-table >tbody > tr ').find('td:first');
+            $(td).css({ 'font-weight': '800', 'font-size': '16px' });
+        }
+        console.log(a);
+        renderTable(a)
+    </script>
+</body>
+
+</html>

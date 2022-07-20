@@ -1,0 +1,131 @@
+{
+    "types": [
+        {
+            "type_name": "焊机-基础参数",
+            "type_data": [
+                {
+                    "p_type": "碎片率"
+                },
+                {
+                    "p_type": "碎片率2"
+                }
+            ]
+        },
+        {
+            "type_name": "焊机-操作参数",
+            "type_data": [
+                {
+                    "p_type": "安全装置"
+                }
+            ]
+        },
+        {
+            "type_name": "焊机-辅助参数",
+            "type_data": [
+                {
+                    "p_type": "卡片次数"
+                }
+            ]
+        }
+    ],
+    "data": [
+        {
+            "se_id": 1,
+            "name": "焊机-设备1 (供应商A)",
+            "eq_data": [
+                {
+                    "type_name": "焊机-基础参数",
+                    "type_data": [
+                        {
+                            "p_type": "碎片率",
+                            "se_id": 1,
+                            "e_value": "10"
+                        },
+                        {
+                            "p_type": "碎片率2",
+                            "se_id": 1,
+                            "e_value": "99.97%"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-辅助参数",
+                    "type_data": [
+                        {
+                            "p_type": "卡片次数",
+                            "se_id": 1,
+                            "e_value": "55"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "se_id": 2,
+            "name": "焊机-设备2 (供应商B)",
+            "eq_data": [
+                {
+                    "type_name": "焊机-基础参数",
+                    "type_data": [
+                        {
+                            "p_type": "碎片率",
+                            "se_id": 2,
+                            "e_value": "15"
+                        },
+                        {
+                            "p_type": "碎片率2",
+                            "se_id": 2,
+                            "e_value": "98%"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-辅助参数",
+                    "type_data": [
+                        {
+                            "p_type": "卡片次数",
+                            "se_id": 2,
+                            "e_value": "12"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "se_id": 41,
+            "name": "焊机-设备3 (供应商A)",
+            "eq_data": [
+                {
+                    "type_name": "焊机-基础参数",
+                    "type_data": [
+                        {
+                            "p_type": "碎片率",
+                            "se_id": 41,
+                            "e_value": "25"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-操作参数",
+                    "type_data": [
+                        {
+                            "p_type": "安全装置",
+                            "se_id": 41,
+                            "e_value": "100%"
+                        }
+                    ]
+                },
+                {
+                    "type_name": "焊机-辅助参数",
+                    "type_data": [
+                        {
+                            "p_type": "卡片次数",
+                            "se_id": 41,
+                            "e_value": "6"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

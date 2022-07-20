@@ -18,6 +18,7 @@
   "homepage": "https://github.com/CatsAndMice/vue3_source_code_learn#readme",
   "dependencies": {
     "@vue/reactivity": "^3.2.36",
+    "@wangeditor/plugin-md": "^1.0.0",
     "coco-git": "^1.1.1",
     "medash": "^3.2.1"
   },

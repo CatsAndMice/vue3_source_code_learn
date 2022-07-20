@@ -36,36 +36,42 @@
             const mouseY = e.pageY;
             const diffX = mouseX - x;
             const diffY = mouseY - y;
-            const diffZ = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2))
-            const cos = diffY / diffZ;
-            //计算弧度
-            const radian = Math.acos(cos)
-            //通过弧度计算出角度
+            const radian = Math.atan2(diffY, diffX)
             let deg = 180 / Math.PI * radian
+            console.log(deg);
 
-            if (mouseX > x && (mouseY > y || mouseY < y)) {//鼠标在第一/四象限
-                deg = 180 - deg;
-            }
+            // const diffZ = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2))
+            // const cos = diffY / diffZ;
 
-            if (mouseX == x && mouseY > y) {//鼠标在y轴负方向上
-                deg = 180;
-            }
+            //计算弧度
+            // const radian = Math.acos(cos)
 
-            if (mouseX == x && mouseY < y) {//鼠标在y轴正方向上
-                deg = 0;
-            }
+            // //通过弧度计算出角度
+            // let deg = 180 / Math.PI * radian
+            // console.log(deg);
+            // if (mouseX > x && (mouseY > y || mouseY < y)) {//鼠标在第一/四象限
+            //     deg = 180 - deg;
+            // }
 
-            if (mouseX > x && mouseY == y) {//鼠标在x轴正方向上
-                deg = 90;
-            }
+            // if (mouseX == x && mouseY > y) {//鼠标在y轴负方向上
+            //     deg = 180;
+            // }
 
-            if (mouseX < x && (mouseY > y || mouseY < y)) {//鼠标在第二/三象限
-                deg = 180 + deg;
-            }
+            // if (mouseX == x && mouseY < y) {//鼠标在y轴正方向上
+            //     deg = 0;
+            // }
 
-            if (mouseX < x && mouseY == y) {//鼠标在x轴负方向
-                deg = 270;
-            }
+            // if (mouseX > x && mouseY == y) {//鼠标在x轴正方向上
+            //     deg = 90;
+            // }
+
+            // if (mouseX < x && (mouseY > y || mouseY < y)) {//鼠标在第二/三象限
+            //     deg = 180 + deg;
+            // }
+
+            // if (mouseX < x && mouseY == y) {//鼠标在x轴负方向
+            //     deg = 270;
+            // }
 
             rotate.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
         }
