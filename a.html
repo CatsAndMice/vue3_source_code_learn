@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* #items1,#items2{
+            display: flex;
+        } */
+    </style>
+</head>
+
+<body>
+    <div id="items1">
+        <p><img width="30px"
+                src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663752025&t=056b85f72518c8474346886415dd304f"
+                alt=""></p>
+        <p><img width="30px"
+                src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663752025&t=056b85f72518c8474346886415dd304f"
+                alt=""></p>
+        <p><img width="30px"
+                src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663752025&t=056b85f72518c8474346886415dd304f"
+                alt=""></p>
+    </div>
+
+    <div id="items2">
+        <p><img width="30px" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663752025&t=056b85f72518c8474346886415dd304f" alt=""></p>
+        <p><img width="30px" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663752025&t=056b85f72518c8474346886415dd304f" alt=""></p>
+        <p>item 3</p>
+    </div>
+
+    <script src="./node_modules/sortablejs/Sortable.min.js"></script>
+    <script>
+        var el = document.getElementById('items1');
+        var el2 = document.getElementById('items2');
+        var sortable = Sortable.create(el, {
+            group: {
+                name: 'shared',
+                pull: 'clone' // To clone: set pull to 'clone'
+            },
+            sort: false,
+            animation: 150
+        });
+
+        var sortable = Sortable.create(el2, {
+            group: {
+                name: 'shared',
+                pull: 'clone'
+            },
+            sort: false,
+            animation: 150
+        });
+    </script>
+</body>
+
+</html>

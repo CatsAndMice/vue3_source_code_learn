@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #myElement,
+        #myElement1 {
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myElement" draggable="true" tabindex="0">
+        Transmitter and receiver
+    </div>
+
+    <div id="myElement1" draggable="false" tabindex="0">
+        Transmitter and receiver
+    </div>
+    <script src="https://unpkg.com/transmat/lib/index.umd.js"></script>
+    <script>
+        const myElement = document.getElementById("myElement");
+        const myElement1 = document.getElementById("myElement1");
+        const { addListeners, Transmat } = transmat
+        addListeners(myElement, 'transmit', event => {
+            const transmat = new Transmat(event);
+            transmat.setData({
+                'text/plain': '测试!',
+                'text/html': '<h1>Hello world!</h1>',
+                'application/json': { foo: 'bar' }
+            });
+        });
+
+        addListeners(myElement1, 'receive', event => {
+            const transmat = new Transmat(event);
+            if (transmat.hasType('application/json') && transmat.accept()) {
+                const payload = transmat.getData('application/json');
+                console.log(JSON.parse(payload));
+            }
+        });
+    </script>
+</body>
+
+</html>
