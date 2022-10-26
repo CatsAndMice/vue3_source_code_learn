@@ -11,6 +11,7 @@
 <body>
     <input type="file" id="file">
     <script type="module">
+        import http from "./http.js"
         import updataFile from "./updataFile.js";
         const file = document.getElementById('file')
         function download(blob, filename) {
@@ -28,26 +29,19 @@
             const file = e.target.files[0]
             console.log(file);
             updataFile(file, {
-                resolve: (result) => {
+                resolve: async (result) => {
                     const { default: url, name } = result
-                    fetch(url, {
-                        headers: new Headers({
-                            Origin: location.origin,
-                        }),
-                        mode: 'cors',
+                    const res = await http.getOssConfig(url, {}, {
+                        headers: {
+                            "Content-Type": 'application/octet-stream',
+                        },
+
+                        onUploadProgress: (res) => {
+                            console.log(res);
+                        }
                     })
-                        .then(res => {
-                            if (res.status == 200) {
-                                // 返回的.blob()为promise，然后生成了blob对象，此方法获得的blob对象包含了数据类型，十分方便
-                                return res.blob()
-                            }
-
-                            throw new Error(`status: ${response.status}.`)
-
-                        })
-                        .then(blob => {
-                            download(blob, name)
-                        })
+                    const blob = new Blob([res.data])
+                    console.log(download(blob, name));
                 }, reject: () => { }
             })
         }

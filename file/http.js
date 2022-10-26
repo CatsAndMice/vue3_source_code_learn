@@ -9,7 +9,9 @@ instance.defaults.validateStatus = status => {
 }
 
 instance.interceptors.request.use(config => {
+    config.headers['Content-Type'] = 'application/octet-stream'
     config.headers.Authorization = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6MTI2LCJ0ZW5hbnRJZCI6MSwidXNlcklkIjoyNzA4NDI5NzE5OTIxOTcsImpvYk51bWJlciI6IllXMTA1MzYiLCJ1c2VybmFtZSI6IuabvuaFp-aFpyJ9.NMGt3_TB-bBkC-nfRH1d6NrxysY-CR6uxykjkzaOKkE"
+   console.log(config);
     return config
 }, err => {
     return Promise.reject(err)

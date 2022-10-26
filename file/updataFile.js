@@ -6,9 +6,9 @@ export default (images, { resolve, reject }) => {
         const MAX_SIZE = 1024 * 1024 * 2;
         const fileUpdate = async ({ url, fileName, formData }) => {
             let { status } = await OssHttp.fileUpdate(url, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+                // headers: {
+                //     "Content-Type": "multipart/form-data",
+                // },
             });
             console.log(status);
             return status === 200 ? `${url}${fileName}` : null;
