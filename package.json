@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "code2.js",
+  "source": "test/index.html",
   "scripts": {
+    "build":"sudo parcel build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +25,7 @@
     "axios": "^1.1.3",
     "coco-git": "^1.3.2",
     "medash": "^3.2.1",
+    "parcel": "^2.7.0",
     "sortablejs": "^1.15.0"
   }
 }
