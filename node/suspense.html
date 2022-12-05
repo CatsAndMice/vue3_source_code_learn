@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <Suspense>
+            <template>
+                <async-component />
+            </template>
+            <template #fallback>
+                Loading...
+            </template>
+        </Suspense>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, h } = Vue
+
+        createApp({
+            components: {
+                AsyncComponent: {
+                    async setup() {
+                        const fn = () => {
+                            return new Promise(function (resolve, reject) {
+                                setTimeout(() => {
+                                    resolve(1)
+                                }, 2000)
+                            })
+                        }
+                        const num = await fn()
+                        return () => {
+                            return h('div', null, num)
+                        }
+                    }
+                }
+            },
+            data() {
+                return {
+                    message: 'Hello Vue!'
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
