@@ -28,6 +28,7 @@
     "medash": "^3.2.1",
     "parcel": "^2.7.0",
     "sortablejs": "^1.15.0",
+    "viewerjs": "^1.11.1",
     "vuedraggable": "^4.1.0"
   }
 }

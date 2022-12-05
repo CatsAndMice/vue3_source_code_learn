@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./node_modules/viewerjs/dist/viewer.min.css">
+    <script src="./node_modules/viewerjs/dist/viewer.min.js"></script>
+</head>
+
+<body>
+    <div id="images">
+        <div>
+            <div>
+                <img src="https://ts3.cn.mm.bing.net/th?id=OIP-C.S3QOsgnlzrpbpAdOXF4YMAHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                    alt="Picture 1">
+            </div>
+        </div>
+
+        <div><img
+                src="https://ts3.cn.mm.bing.net/th?id=OIP-C.S3QOsgnlzrpbpAdOXF4YMAHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                alt="Picture 2"></div>
+        <div><img
+                src="https://ts3.cn.mm.bing.net/th?id=OIP-C.S3QOsgnlzrpbpAdOXF4YMAHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                alt="Picture 3"></div>
+    </div>
+    <script>
+        const viewer = new Viewer(document.getElementById('images'), {
+            viewed() {
+                viewer.zoomTo(1);
+            },
+        });
+    </script>
+</body>
+
+</html>
