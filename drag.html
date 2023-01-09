@@ -6,72 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        ul,
-        li {
-            list-style: none;
-        }
-
-        #left,
-        #right {
-            width: 200px;
-            height: 300px;
-        }
-
-        li {
-            height: 100px;
-            background-color: red;
-        }
-    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./node_modules/vue3-smooth-dnd/dist/vue3-smooth-dnd.global.js"></script>
 </head>
 
 <body>
-    <ul id="left">
-        <li>item 1</li>
-        <li>item 2</li>
-        <li>item 3</li>
-    </ul>
-
-    <ul id="right">
-        <li>item 1</li>
-        <li>item 2</li>
-        <li>item 3</li>
-    </ul>
-
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script>
-        new Sortable(document.getElementById('left'), {
-            group: {
-                name: 'shared',
-                pull: 'clone',
-                put: false // Do not allow items to be put into this list
-            },
-            multiDrag: true,
-            selectedClass: 'selected', // The class applied to the selected items
-            fallbackTolerance: 3,
-            animation: 150,
-            sort: false,
-            onClone: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
-                var cloneEl = evt.clone;
-            },
-        });
-
-        new Sortable(document.getElementById('right'), {
-            group: 'shared',
-            animation: 150,
-            sort: false,
-            setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
-                console.log(dragEl.textContent);
-                dataTransfer.setData('Text', dragEl.textContent); // `dataTransfer` object of HTML5 DragEvent
-            },
-            // Element is dropped into the list from another list
-            onAdd: function (/**Event*/evt) {
-                console.log(evt.item,evt.item.dataTransfer);
-                // same properties as onEnd
-            },
-
-        });
-    </script>
+<script>
+    const {createApp} = Vue
+    createApp()
+</script>
 </body>
 
 </html>

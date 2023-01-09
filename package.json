@@ -29,6 +29,7 @@
     "parcel": "^2.7.0",
     "sortablejs": "^1.15.0",
     "viewerjs": "^1.11.1",
+    "vue3-smooth-dnd": "^0.0.2",
     "vuedraggable": "^4.1.0"
   }
 }
